@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    
+	<article>
+		<h2>{{ article.title }}</h2>
+		<div class="metadata">
+			Écrit le {{ article.createdAt | date('d/m/Y') }} à {{ article.createdAt | date('H:i') }} dans la catégorie {{ article.category.title }}
+		</div>
+		<div class="content">
+			<img src="{{ article.image }}" alt="{{ article.title }}">
+			{{ article.content | raw }}
+		</div>
+	</article>
+	<hr>
+	<section id="commentaires">
+		<h3>{{ article.comments | length }} Commentaires</h3>
+		{% for comment in article.comments %}	
+			<div class="comment">
+				<span class="row">
+					<div class="col-3">
+						{{ comment.author }} (<small>{{ comment.createdAt | date('d/m/Y à H:i') }}</small>)
+					</div>
+					<div class="col-9">
+						{{ comment.content | raw }}
+					</div>
+				</span>
+			</div>
+		{% endfor %}
+	
+		{% if not app.user %}
+		
+		{% else %}
+		    {{ form_start(formComment) }}
+		
+			{{ form_row(formComment.author, { 'label' : 'Auteur : ', 'attr' : { 'placeholder' : 'Entrez votre nom' } }) }}		
+
+			{{ form_row(formComment.content, { 'label' : 'Commentaire : ', 'attr' : { 'placeholder' : 'Entrez votre commentaire' } }) }}		
+
+			<button type="submit" class="btn btn-primary">Ajouter mon commentaire</button>
+		
+			{{ form_end(formComment) }}
+		{% endif %}
+
+	</section>
+
+{% endblock %}
